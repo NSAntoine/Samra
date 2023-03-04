@@ -12,3 +12,13 @@ There are a few existing asset catalog viewer applications for macOS, however, n
 
 ## What versions does this support?
 macOS 10.15.1+
+
+## How can I download this?
+Download the .app from the Releases
+
+## Preview
+<img width="962" alt="image" src="https://user-images.githubusercontent.com/48022799/222929053-45e75bed-4398-4670-8280-dfbd1ff13eb2.png">
+<img width="1099" alt="image" src="https://user-images.githubusercontent.com/48022799/222929119-4f9e043c-fdbf-4e39-9137-f344fc693da4.png">
+<img width="493" alt="image" src="https://user-images.githubusercontent.com/48022799/222929132-4e5ee546-18b5-492f-a4a6-5599c1b76a20.png">
+<img width="753" alt="image" src="https://user-images.githubusercontent.com/48022799/222929151-6355f60a-757e-4b17-bc4a-cb25213e8e8c.png">
+<img width="1077" alt="image" src="https://user-images.githubusercontent.com/48022799/222929188-7eb62314-8433-42c6-baf5-5d851b679998.png">
