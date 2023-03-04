@@ -1,0 +1,3 @@
+module AppKitPrivates {
+    header "AppKitPrivates.h"
+}

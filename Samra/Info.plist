@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDocumentTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeExtensions</key>
+            <array>
+                <string>car</string>
+            </array>
+            <key>CFBundleTypeIconFile</key>
+            <string></string>
+            <key>CFBundleTypeName</key>
+            <string>Asset Catalog</string>
+            <key>CFBundleTypeIconFile</key>
+            <string></string>
+            <key>CFBundleTypeIconSystemGenerated</key>
+            <integer>1</integer>
+            <key>CFBundleTypeRole</key>
+            <string>Viewer</string>
+            <key>LSItemContentTypes</key>
+            <array>
+                <string>com.apple.assetcatalog</string>
+            </array>
+            <key>LSTypeIsPackage</key>
+            <integer>0</integer>
+            <key>NSDocumentClass</key>
+            <string>$(PRODUCT_MODULE_NAME).AssetCatalogDocument</string>
+        </dict>
+	</array>
+    <key>UTExportedTypeDeclarations</key>
+    <array>
+        <dict>
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.data</string>
+            </array>
+            <key>UTTypeDescription</key>
+            <string>Asset Catalog</string>
+            <key>UTTypeIdentifier</key>
+            <string>com.apple.assetcatalog</string>
+            <key>UTTypeIconFile</key>
+            <string></string>
+            <key>UTTypeIcons</key>
+            <dict>
+                <key>UTTypeIconBackgroundName</key>
+                <string>AssetCatalog</string>
+                <key>UTTypeIconBadgeName</key>
+                <string></string>
+                <key>UTTypeIconText</key>
+                <string></string>
+            </dict>
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>car</string>
+                </array>
+            </dict>
+        </dict>
+    </array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.serena.samra.openfile</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>samra</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
