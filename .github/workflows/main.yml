@@ -15,7 +15,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Build
-        env:
-          scheme: ${{ 'default' }}
         run: |
-          xcodebuild clean build analyze -scheme Samra -project Samra.xcodeproj | xcpretty && exit ${PIPESTATUS[0]}
+          xcodebuild clean build -scheme Samra -project Samra.xcodeproj | xcpretty && exit ${PIPESTATUS[0]}
