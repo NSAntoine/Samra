@@ -1,0 +1,31 @@
+name: Xcode - Build and Analyze
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Build and analyse default scheme using xcodebuild command
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Build
+        run: |
+          xcodebuild clean build -scheme Samra -project Samra.xcodeproj -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO BUILD_DIR=${{ github.workspace }}/xcodebuild
+          
+          mkdir -p ${{ github.workspace }}/product
+          cp -R ${{ github.workspace }}/xcodebuild/Release/Samra.app ${{ github.workspace }}/product
+          
+          cd ${{ github.workspace }}/product
+          zip -r ${{ github.workspace }}/Samra.zip .
+          
+      - name: Upload app to artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Samra
+          path: ${{ github.workspace }}/Samra.zip
