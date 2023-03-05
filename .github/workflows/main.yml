@@ -20,7 +20,6 @@ jobs:
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/xcodebuild/Release/Samra.app ${{ github.workspace }}/product
-          cp -R ${{ github.workspace }}/xcodebuild/Release/Samra.app.dSYM ${{ github.workspace }}/product
           
           cd ${{ github.workspace }}/product
           zip -r ${{ github.workspace }}/Samra.zip .
