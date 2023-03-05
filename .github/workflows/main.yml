@@ -2,9 +2,9 @@ name: Xcode - Build and Analyze
 
 on:
   push:
-    branches: [ "gh-actions" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "gh-actions" ]
+    branches: [ "main" ]
 
 jobs:
   build:
