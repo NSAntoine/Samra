@@ -79,38 +79,35 @@ class TypesListViewController: NSViewController {
         }
     }
     
-    @objc
-    func goToSection(menuItemSender: NSMenuItem) {
-        let selectedTypeIndex = allTypes.firstIndex { type in
-            type.rawValue == menuItemSender.tag
-        }
-        
-        guard let selectedTypeIndex else { return }
-        changeSection(to: selectedTypeIndex)
-    }
-    
     func setupMenuBarItems() {
-        let allRawValues = allTypes.map(\.rawValue)
         for item in NSApplication.shared.mainMenu?.items ?? [] {
+            // we just want to modify the "Sections" section
             guard item.title == "Sections", let submenu = item.submenu else {
                 continue
             }
             
             submenu.autoenablesItems = false
-            for submenuItem in submenu.items {
-                submenuItem.isEnabled = allRawValues.contains(submenuItem.tag)
-                
-                // set the keyboard combo to be command+(index + 1)
-                // for example, if the first item on the list is Color
-                // then the combo would be cmd 1
-                if submenuItem.isEnabled,
-                   let rawValueIndx = allRawValues.firstIndex(of: submenuItem.tag) {
-                    submenuItem.keyEquivalent = (rawValueIndx + 1).description
-                }
+            submenu.removeAllItems()
+            
+            // add only the types that we have
+            // to the section
+            for (index, item) in allTypes.enumerated() {
+                // make the keyEquivalent index + 1
+                // so that it's less confusing to the user,
+                // ie, if `Color` was the first section, this would make it cmd 1
+                // rather than cmd 0
+                let item =  NSMenuItem(title: item.description,
+                                       action: #selector(goToSection),
+                                       keyEquivalent: (index + 1).description, tag: index)
+                submenu.addItem(item)
             }
         }
     }
     
+    @objc
+    func goToSection(menuItemSender: NSMenuItem) {
+        changeSection(to: menuItemSender.tag)
+    }
 }
 
 extension TypesListViewController: NSTableViewDataSource, NSTableViewDelegate {

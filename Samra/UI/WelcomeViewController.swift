@@ -70,14 +70,6 @@ class WelcomeViewController: NSViewController {
             closeWindowButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8)
         ])
         
-        // Register for when cursor is on Window
-        // if it's not, hide the closeWindowButton
-        // otherwise show it
-//        NSEvent.addLocalMonitorForEvents(matching: [.mouseEntered, .mouseExited]) { event in
-//            closeWindowButton.setHiddenWithAnimations(hidden: event.type == .mouseExited)
-//            return event
-//        }
-        
         let showThisWindowButton = NSButton(title: "Show this window when Samra launches",
                                             target: self,
                                             action: #selector(showThisWindowOnLaunchButtonClicked(sender:)))
@@ -90,6 +82,23 @@ class WelcomeViewController: NSViewController {
             showThisWindowButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10),
             showThisWindowButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
+        
+        // Register for when cursor is on Window
+        // if it's not, hide the closeWindowButton and the showThisWindowButton
+        // otherwise show it
+        NSEvent.addLocalMonitorForEvents(matching: [.mouseEntered, .mouseExited]) { event in
+            let newAlphaValue: CGFloat = (event.type == .mouseExited) ? 0 : 1
+            
+            NSAnimationContext.runAnimationGroup { context in
+                context.duration = 0.2
+                context.allowsImplicitAnimation = true
+                
+                closeWindowButton.animator().alphaValue = newAlphaValue
+                showThisWindowButton.animator().alphaValue = newAlphaValue
+            }
+            
+            return event
+        }
     }
     
     @objc

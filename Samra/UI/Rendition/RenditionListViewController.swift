@@ -334,7 +334,8 @@ extension RenditionListViewController: NSCollectionViewDelegate {
         for indexPath in indexPaths {
             let layer = collectionView.item(at: indexPath)?.view.layer
             layer?.borderColor = NSColor.systemGray.cgColor
-            layer?.borderWidth = 1.87 // standard
+            // item is no longer in focus, set it's border width to the standard amount 
+            layer?.borderWidth = 1.87
         }
     }
     

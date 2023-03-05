@@ -92,8 +92,19 @@ extension NSWindow {
 }
 
 extension NSColor {
+    static func _makeStandardWindowBg(appearance: NSAppearance) -> NSColor {
+        switch appearance.name {
+        case .aqua, .vibrantLight, .accessibilityHighContrastAqua, .accessibilityHighContrastVibrantLight: // light
+            return .white
+        case .darkAqua, .accessibilityHighContrastVibrantDark, .accessibilityHighContrastDarkAqua, .vibrantDark: // dark
+            return NSColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1)
+        default:
+            fatalError()
+        }
+    }
+    
     static var standardWindowBackgroundColor: NSColor {
-        return NSColor(red: 0.19, green: 0.19, blue: 0.19, alpha: 1)
+        return NSColor(name: nil, dynamicProvider: _makeStandardWindowBg(appearance:))
     }
 }
 
