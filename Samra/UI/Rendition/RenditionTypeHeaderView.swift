@@ -15,8 +15,8 @@ class RenditionTypeHeaderView: NSView, NSCollectionViewElement {
     var typeLabel: NSTextField!
     var amountOfItemsLabel: NSTextField!
     
-    func configure(with type: RenditionType, numberOfItems: Int) {
-        typeLabel = NSTextField(labelWithString: type.description)
+    func configure(typeLabelText: String, numberOfItems: Int) {
+        typeLabel = NSTextField(labelWithString: typeLabelText)
         typeLabel.translatesAutoresizingMaskIntoConstraints = false
         
         addSubview(typeLabel)

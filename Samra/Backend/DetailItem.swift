@@ -96,7 +96,7 @@ struct DetailItemSection: Hashable {
         let key = rendition.namedLookup.key
         items.append(DetailItemSection(sectionHeader: "Rendition Information", items: [
             DetailItem(primaryText: "Display Gamut", secondaryText: Rendition.DisplayGamut(key)),
-            DetailItem(primaryText: "Appearance", secondaryText: Rendition.Appearance(key)),
+            DetailItem(primaryText: "Appearance", secondaryText: rendition.namedLookup.appearance),
             DetailItem(primaryText: "Idiom", secondaryText: Rendition.Idiom(key))
         ]))
         

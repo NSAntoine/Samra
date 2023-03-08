@@ -13,8 +13,7 @@ import AssetCatalogWrapper
 // but adjusted for Samra
 class AssetCatalogDocument: NSDocument {
     override func read(from url: URL, ofType typeName: String) throws {
-        let (catalog, collection) = try AssetCatalogWrapper.shared.renditions(forCarArchive: url)
-        let windowController = WindowController(kind: .assetCatalog(catalog, collection, url))
+        let windowController = WindowController(kind: .assetCatalog(try AssetCatalogInput(fileURL: url)))
         addWindowController(windowController)
         windowController.showWindow(nil)
     }

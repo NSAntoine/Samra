@@ -52,6 +52,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             ]),
             NSMenuItem(submenuTitle: "File", items: [
                 NSMenuItem(title: "Open...", action: #selector(openMenuItemClicked), keyEquivalent: "o"),
+                NSMenuItem(title: "Export to...", action: #selector(RenditionListViewController.exportCatalog)),
+                NSMenuItem.separator(),
+                NSMenuItem(title: "Diff Asset Catalogs", action: #selector(openDiffViewController), keyEquivalent: "d"),
                 NSMenuItem.separator(),
                 NSMenuItem(title: "Close", action: #selector(NSWindow.performClose(_:)), keyEquivalent: "w")
             ]),
@@ -150,6 +153,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc
     func openAboutPanel() {
         WindowController(kind: .aboutPanel).showWindow(self)
+    }
+    
+    @objc
+    func openDiffViewController() {
+        WindowController(kind: .diffSelection).showWindow(self)
     }
     
     func applicationDockMenu(_ sender: NSApplication) -> NSMenu? {

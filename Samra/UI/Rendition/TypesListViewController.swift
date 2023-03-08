@@ -79,6 +79,17 @@ class TypesListViewController: NSViewController {
         }
     }
     
+    // Map this function to the main list vc exportCatalog function
+    @objc
+    func exportCatalog() {
+        for item in (parent as? NSSplitViewController)?.splitViewItems ?? [] {
+            if let list = item.viewController as? RenditionListViewController {
+                list.exportCatalog()
+                break
+            }
+        }
+    }
+    
     func setupMenuBarItems() {
         for item in NSApplication.shared.mainMenu?.items ?? [] {
             // we just want to modify the "Sections" section

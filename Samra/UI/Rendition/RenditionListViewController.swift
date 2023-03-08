@@ -6,9 +6,10 @@
 // 
 
 import Cocoa
+import AppKitPrivates
 import class SwiftUI.NSHostingController
 import AssetCatalogWrapper
-import AppKitPrivates
+import SVGWrapper
 
 /// A View Controller displaying all the renditions of a given Asset Catalog.
 class RenditionListViewController: NSViewController {
@@ -52,7 +53,7 @@ class RenditionListViewController: NSViewController {
         }
         
 #warning("Add footers for explanations for multisizeImageSet")
-        dataSource.supplementaryViewProvider = { collectionView, kind, indexPath in
+        dataSource.supplementaryViewProvider = { [unowned self] collectionView, kind, indexPath in
             guard kind == NSCollectionView.elementKindSectionHeader else {
                 return nil
             }
@@ -61,9 +62,9 @@ class RenditionListViewController: NSViewController {
                 ofKind: kind,
                 withIdentifier: RenditionTypeHeaderView.identifier,
                 for: indexPath) as! RenditionTypeHeaderView
-            let snapshot = self.dataSource.snapshot()
+            let snapshot = dataSource.snapshot()
             let section = snapshot.sectionIdentifiers[indexPath.section]
-            header.configure(with: section, numberOfItems: snapshot.numberOfItems(inSection: section))
+            header.configure(typeLabelText: section.description, numberOfItems: snapshot.numberOfItems(inSection: section))
             return header
         }
         
@@ -71,7 +72,7 @@ class RenditionListViewController: NSViewController {
         collectionView.isSelectable = true
         collectionView.delegate = self
         collectionView.menuProvider = self
-        collectionView.collectionViewLayout = makeLayout(layout: .horizontal)
+        collectionView.collectionViewLayout = Self.makeLayout(layout: .horizontal)
         collectionView.identifier = "HorizLayout"
         
         collectionView.register(RenditionCollectionViewItem.self,
@@ -83,7 +84,7 @@ class RenditionListViewController: NSViewController {
         
         splitViewParent?.handler = { [unowned self] item, didCollapse, _ in
             guard item.viewController.identifier == "RenditionInfo" else { return }
-            collectionView.collectionViewLayout = makeLayout(
+            collectionView.collectionViewLayout = Self.makeLayout(
                 layout: didCollapse ? .horizontal : .vertical
             )
             
@@ -109,7 +110,27 @@ class RenditionListViewController: NSViewController {
             vc.tableView.selectRowIndexes([currentSection], byExtendingSelection: true)
             vc.ignoreChanges = false
         }
+        
+        collectionView.registerForDraggedTypes(NSImage.imageTypes.map { .init($0) })
+        collectionView.setDraggingSourceOperationMask(.every, forLocal: true)
+        collectionView.setDraggingSourceOperationMask(.every, forLocal: false)
     }
+    
+    func collectionView(_ collectionView: NSCollectionView, canDragItemsAt indexPaths: Set<IndexPath>, with event: NSEvent) -> Bool {
+        return true
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, pasteboardWriterForItemAt indexPath: IndexPath) -> NSPasteboardWriting? {
+//        return dataSource.itemIdentifier(for: indexPath)?.name as? NSString
+        switch dataSource.itemIdentifier(for: indexPath)?.representation {
+        case .image(let cgImage):
+            return NSImage(cgImage: cgImage, size: cgImage.size)
+        default:
+            return nil
+        }
+    }
+    
+    func collectionView(_ collectionView: NSCollectionView, draggingSession session: NSDraggingSession, endedAt screenPoint: NSPoint, dragOperation operation: NSDragOperation) {}
     
     @discardableResult
     func addSnapshot(collectionToAdd: RenditionCollection) -> NSDiffableDataSourceSnapshot<RenditionType, Rendition> {
@@ -138,6 +159,52 @@ class RenditionListViewController: NSViewController {
         }
     }
     
+    deinit {
+        print("And I'm tripping and falling..")
+    }
+}
+
+extension RenditionListViewController {
+    static func makeLayout(layout: LayoutMode) -> NSCollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                              heightDimension: .fractionalHeight(1.0))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                               heightDimension: .absolute(115))
+        
+        let group: NSCollectionLayoutGroup
+        switch layout {
+        case .vertical:
+            group = .vertical(layoutSize: groupSize, subitems: [item]/*, count: 3*/)
+        case .horizontal:
+            group = .horizontal(layoutSize: groupSize, subitem: item, count: 3)
+        }
+        
+        let spacing = CGFloat(15)
+        group.interItemSpacing = .fixed(spacing)
+        
+        let titleHeaderSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .absolute(50)
+        )
+        
+        let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
+            layoutSize: titleHeaderSize,
+            elementKind: NSCollectionView.elementKindSectionHeader,
+            alignment: .topTrailing
+        )
+        
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = spacing
+        section.contentInsets = NSDirectionalEdgeInsets(top: 20,
+                                                        leading: spacing,
+                                                        bottom: 20,
+                                                        trailing: spacing)
+        section.boundarySupplementaryItems = [titleSupplementary]
+        //section.orthogonalScrollingBehavior = .continuous
+        return NSCollectionViewCompositionalLayout(section: section)
+    }
 }
 
 extension RenditionListViewController: MenuProvider {
@@ -226,6 +293,86 @@ extension RenditionListViewController {
         
         presentAsSheet(NSHostingController(rootView: detailsView))
     }
+    
+    @objc
+    func exportCatalog() {
+        let panel = NSOpenPanel()
+        panel.title = "Directory to export to"
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.canChooseFiles = false
+        
+        guard panel.runModal() == .OK, let destinationURL = panel.url else { return }
+        let justRenditions = collection.flatMap(\.renditions)
+        var failedItems: [Rendition: String] = [:]
+        for rendition in justRenditions {
+            switch rendition.type {
+            case .image, .icon:
+                guard let image = rendition.image else {
+                    failedItems[rendition] = "Failed to generate image"
+                    continue
+                }
+                
+                let rep = NSBitmapImageRep(cgImage: image)
+                guard let data = rep.representation(using: .png, properties: [.compressionFactor: 1]) else {
+                    failedItems[rendition] = "Unable to generate png data for image"
+                    continue
+                }
+                
+                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
+                if writeURL.pathExtension.isEmpty {
+                    writeURL.appendPathExtension("png")
+                }
+                
+                do {
+                    try data.write(to: writeURL, options: .atomic)
+                } catch {
+                    failedItems[rendition] = "Failed to write to \(writeURL.path): \(error)"
+                }
+            case .pdf:
+                guard let data = rendition.cuiRend.srcData else {
+                    failedItems[rendition] = "Failed to generate PDF data"
+                    continue
+                }
+                
+                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
+                if writeURL.pathExtension != "pdf" {
+                    writeURL.appendPathExtension("pdf")
+                }
+                
+                do {
+                    try data.write(to: writeURL)
+                } catch {
+                    failedItems[rendition] = "Unable to write to \(writeURL.path): \(error.localizedDescription)"
+                }
+            case .svg:
+                guard let svg = rendition.cuiRend.svgDocument() else {
+                    failedItems[rendition] = "Failed to generate SVG"
+                    continue
+                }
+                
+                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
+                if writeURL.pathExtension != "svg" {
+                    writeURL.appendPathExtension("svg")
+                }
+                SVGDocument(doc: svg).write(to: writeURL)
+            default:
+                break
+            }
+        }
+        
+        if !failedItems.isEmpty {
+            var failedItemsMessage: String = ""
+            for (rendition, error) in failedItems {
+                failedItemsMessage.append("\(rendition.name): \(error.localizedLowercase)")
+            }
+            failedItemsMessage = failedItemsMessage.trimmingCharacters(in: .whitespaces)
+            NSAlert(title: "Failed to export (some) items", message: failedItemsMessage)
+                .runModal()
+        } else {
+            NSWorkspace.shared.activateFileViewerSelecting([destinationURL])
+        }
+    }
 }
 
 extension RenditionListViewController {
@@ -233,47 +380,6 @@ extension RenditionListViewController {
     enum LayoutMode {
         case vertical
         case horizontal
-    }
-    
-    func makeLayout(layout: LayoutMode) -> NSCollectionViewCompositionalLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                              heightDimension: .fractionalHeight(1.0))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
-                                               heightDimension: .absolute(115))
-        
-        let group: NSCollectionLayoutGroup
-        switch layout {
-        case .vertical:
-            group = .vertical(layoutSize: groupSize, subitems: [item]/*, count: 3*/)
-        case .horizontal:
-            group = .horizontal(layoutSize: groupSize, subitem: item, count: 3)
-        }
-        
-        let spacing = CGFloat(15)
-        group.interItemSpacing = .fixed(spacing)
-        
-        let titleHeaderSize = NSCollectionLayoutSize(
-            widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(50)
-        )
-        
-        let titleSupplementary = NSCollectionLayoutBoundarySupplementaryItem(
-            layoutSize: titleHeaderSize,
-            elementKind: NSCollectionView.elementKindSectionHeader,
-            alignment: .topTrailing
-        )
-        
-        
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = spacing
-        section.contentInsets = NSDirectionalEdgeInsets(top: 20,
-                                                        leading: spacing,
-                                                        bottom: 20,
-                                                        trailing: spacing)
-        section.boundarySupplementaryItems = [titleSupplementary]
-        //section.orthogonalScrollingBehavior = .continuous
-        return NSCollectionViewCompositionalLayout(section: section)
     }
 }
 
@@ -298,7 +404,7 @@ extension RenditionListViewController: NSCollectionViewDelegate {
             parent.removeSplitViewItem(parent.splitViewItems[2])
         }
         
-        let view = RenditionInformationView(rendition: item, catalog: catalog, fileURL: fileURL) { [unowned self] change in
+        let view = RenditionInformationView(rendition: item, catalog: catalog, fileURL: fileURL, canEdit: true, canDelete: true) { [unowned self] change in
             switch change {
             case .delete:
                 refreshAssetCatalog()
@@ -321,7 +427,7 @@ extension RenditionListViewController: NSCollectionViewDelegate {
         parent.addSplitViewItem(splitViewItem)
         
         if collectionView.identifier == "HorizLayout" {
-            collectionView.collectionViewLayout = makeLayout(layout: .vertical)
+            collectionView.collectionViewLayout = Self.makeLayout(layout: .vertical)
             collectionView.identifier = "VerticalLayout"
             // scroll back here because switching between layouts may cause the item to not be visible
             // in the new layout

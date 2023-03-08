@@ -17,8 +17,14 @@ class WindowController: NSWindowController, NSWindowDelegate {
         /// The 'About Samra' Panel.
         case aboutPanel
         
+        /// A View Controller to select 2 AssetCatalogs to diff between them
+        case diffSelection
+        
+        /// A View Controller to show the diff between 2 asset catalogs
+        case diffShow([RenditionDiff], CUICatalog, URL)
+        
         /// Show a View Controller of a rendition collection
-        case assetCatalog(CUICatalog, RenditionCollection, URL)
+        case assetCatalog(AssetCatalogInput)
     }
     
     convenience init(kind: Kind) {
@@ -32,10 +38,11 @@ class WindowController: NSWindowController, NSWindowDelegate {
             splitViewController.addSplitViewItem(NSSplitViewItem(viewController: welcomeViewController))
             splitViewController.addSplitViewItem(NSSplitViewItem(sidebarWithViewController: list))
             viewController = splitViewController
-        case .assetCatalog(let catalog, let collection, let url):
+        case .assetCatalog(let input):
             let splitViewController = CollapseNotifierSplitViewController()
-            let renditionVC = RenditionListViewController(catalog: catalog, collection: collection, fileURL: url)
-            let typesSidebar = TypesListViewController(types: collection.map(\.type)) { type in
+            let renditionVC = RenditionListViewController(catalog: input.catalog, collection: input.collection,
+                                                          fileURL: input.fileURL)
+            let typesSidebar = TypesListViewController(types: input.collection.map(\.type)) { type in
                 if let index = renditionVC.dataSource.snapshot().indexOfSection(type) {
                     renditionVC.collectionView.scrollToItems(at: [IndexPath(item: 0, section: index)], scrollPosition: .top)
                 }
@@ -46,6 +53,10 @@ class WindowController: NSWindowController, NSWindowDelegate {
             viewController = splitViewController
         case .aboutPanel:
             viewController = AboutViewController()
+        case .diffSelection:
+            viewController = AssetCatalogDiffSelectionViewController()
+        case .diffShow(let diffs, let catalog, let fileURL):
+            viewController = DiffListViewController(diffs: diffs, catalog: catalog, fileURL: fileURL)
         }
         
         let window = NSWindow(contentViewController: viewController)
@@ -53,7 +64,7 @@ class WindowController: NSWindowController, NSWindowDelegate {
         self.init(window: window)
         
         switch kind {
-        case .assetCatalog(_, _, let fileURL):
+        case .assetCatalog(let input):
             let toolbar = NSToolbar()
             toolbar.delegate = self
             window.toolbar = toolbar
@@ -63,9 +74,9 @@ class WindowController: NSWindowController, NSWindowDelegate {
             window.toolbar?.centeredItemIdentifier = .searchBar
             window.animationBehavior = .documentWindow
             window.delegate = self
-            window.title = fileURL.lastPathComponent
+            window.title = input.fileURL.lastPathComponent
             if #available(macOS 11, *) {
-                window.subtitle = fileURL.deletingLastPathComponent().lastPathComponent
+                window.subtitle = input.fileURL.deletingLastPathComponent().lastPathComponent
             }
         case .welcome:
             window.makeTitleBarTransparentAndUnresizable()
@@ -73,6 +84,18 @@ class WindowController: NSWindowController, NSWindowDelegate {
             window.title = "Samra"
         case .aboutPanel:
             window.makeTitleBarTransparentAndUnresizable()
+            window.title = "Samra"
+        case .diffSelection:
+            window.title = "Diff"
+        case .diffShow(_, _, _):
+            let toolbar = NSToolbar()
+            toolbar.delegate = self
+            window.toolbar = toolbar
+            window.title = "Diff"
+            toolbar.insertItem(withItemIdentifier: .flexibleSpace, at: 0)
+            toolbar.insertItem(withItemIdentifier: .searchBar, at: 1)
+            window.animationBehavior = .documentWindow
+            window.delegate = self
         }
     }
 }
@@ -89,7 +112,13 @@ extension WindowController: NSToolbarDelegate {
     func toolbar(_ toolbar: NSToolbar, itemForItemIdentifier itemIdentifier: NSToolbarItem.Identifier, willBeInsertedIntoToolbar flag: Bool) -> NSToolbarItem? {
         switch itemIdentifier {
         case .searchBar:
-            let rendVC = (contentViewController as? NSSplitViewController)?.splitViewItems[1].viewController as? RenditionListViewController
+            let rendVC: NSSearchFieldDelegate?
+            
+            if let splitVC = contentViewController as? NSSplitViewController {
+                rendVC = splitVC.splitViewItems[1].viewController as? NSSearchFieldDelegate
+            } else {
+                rendVC = contentViewController as? NSSearchFieldDelegate
+            }
             
             /*
             if #available(macOS 11, *) {

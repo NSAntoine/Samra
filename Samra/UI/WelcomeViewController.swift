@@ -52,6 +52,17 @@ class WelcomeViewController: NSViewController {
             openFolderOption.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
         
+        let diffCatalogsOption = WelcomeScreenOption(primaryText: "Diff Catalogs", secondaryText: "Diff 2 different Asset Catalogs on your Mac", image: NSImage(systemName: "doc.plaintext")) {
+            WindowController(kind: .diffSelection).showWindow(nil)
+        }
+        
+        diffCatalogsOption.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(diffCatalogsOption)
+        
+        NSLayoutConstraint.activate([
+            diffCatalogsOption.topAnchor.constraint(equalTo: openFolderOption.bottomAnchor, constant: 20),
+            diffCatalogsOption.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+        ])
         
         let closeWindowButton = NSButton()
         closeWindowButton.image = NSImage(systemName: "xmark")
@@ -61,7 +72,7 @@ class WelcomeViewController: NSViewController {
         closeWindowButton.showsBorderOnlyWhileMouseInside = true
         closeWindowButton.bezelStyle = .roundRect
         closeWindowButton.bezelColor = .gray
-        //closeWindowButton.isHidden = true
+        
         closeWindowButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(closeWindowButton)
         

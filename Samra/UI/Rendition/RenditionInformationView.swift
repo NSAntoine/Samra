@@ -16,8 +16,11 @@ struct RenditionInformationView: View {
     var rendition: Rendition
     var catalog: CUICatalog
     var fileURL: URL
+    var canEdit: Bool
+    var canDelete: Bool
+    var changeCallback: ((Change) -> Void)?
     
-    var changeCallback: (Change) -> Void
+    var doneButtonCallback: (() -> Void)?
     
     var body: some View {
         switch rendition.representation {
@@ -84,7 +87,7 @@ struct RenditionInformationView: View {
                     colorPanel.callback = { nsColor in
                         do {
                             try catalog.editItem(rendition, fileURL: fileURL, to: .color(nsColor.cgColor))
-                            changeCallback(.edit)
+                            changeCallback?(.edit)
                         } catch {
                             NSAlert(title: "Failed to edit item", message: error.localizedDescription)
                                 .runModal()
@@ -109,7 +112,7 @@ struct RenditionInformationView: View {
                         
                         do {
                             try catalog.editItem(rendition, fileURL: fileURL, to: .image(cgImage))
-                            changeCallback(.edit)
+                            changeCallback?(.edit)
                         } catch {
                             NSAlert(title: "Failed to edit item", message: error.localizedDescription)
                                 .runModal()
@@ -119,7 +122,11 @@ struct RenditionInformationView: View {
                     break // never supposed to get here
                 }
             }
-            .disabled(!rendition.type.isEditable)
+            .disabled(!canEdit || !rendition.type.isEditable)
+            
+            if let doneButtonCallback {
+                Button("Done", action: doneButtonCallback)
+            }
             
             Button {
                 showDeleteAlert = true
@@ -127,6 +134,7 @@ struct RenditionInformationView: View {
                 Text("Delete")
                     .foregroundColor(.red)
             }
+            .disabled(!canDelete)
         }
         
         mainView
@@ -135,7 +143,7 @@ struct RenditionInformationView: View {
                 let deleteButton: Alert.Button = .destructive(Text("Delete")) {
                     do {
                         try catalog.removeItem(rendition, fileURL: fileURL)
-                        changeCallback(.delete)
+                        changeCallback?(.delete)
                     } catch {
                         NSAlert(title: "Error encountered while trying to delete \(rendition.name)",
                                 message: error.localizedDescription).runModal()

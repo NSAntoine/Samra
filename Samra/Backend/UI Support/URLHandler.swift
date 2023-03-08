@@ -15,7 +15,7 @@ class URLHandler {
     private init() {}
     
     @objc
-    func presentArchiveChooserPanel(insertToRecentItems: Bool = false, senderView: NSView?) {
+    func presentArchiveChooserPanel(insertToRecentItems: Bool = false, senderView: NSView?, handler: ((URL) -> Void)? = nil) {
         let panel = NSOpenPanel()
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
@@ -26,7 +26,11 @@ class URLHandler {
         }
         
         if panel.runModal() == .OK {
-            handleURLChosen(urlChosen: panel.urls[0], senderView: senderView, insertToRecentItems: insertToRecentItems)
+            if let handler {
+                handler(panel.urls[0])
+            } else {
+                handleURLChosen(urlChosen: panel.urls[0], senderView: senderView, insertToRecentItems: insertToRecentItems)
+            }
         }
     }
     
@@ -58,9 +62,9 @@ class URLHandler {
         }
         
         do {
-            let (cuiCatalog, collection) = try AssetCatalogWrapper.shared.renditions(forCarArchive: urlToOpen)
+            let input = try AssetCatalogInput(fileURL: urlToOpen)
             // open new window & view controller for it
-            WindowController(kind: .assetCatalog(cuiCatalog, collection, urlToOpen)).showWindow(self)
+            WindowController(kind: .assetCatalog(input)).showWindow(self)
             if insertToRecentItems {
                 var copy = Preferences.recentlyOpenedFilePaths
                 copy.removeAll { $0 == urlChosen.path }
