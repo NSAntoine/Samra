@@ -16,10 +16,13 @@ jobs:
         uses: actions/checkout@v3
       - name: Build
         run: |
-          xcodebuild clean build -scheme Samra -project Samra.xcodeproj -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO BUILD_DIR=${{ github.workspace }}/xcodebuild
+          xcodebuild build -scheme Samra -project Samra.xcodeproj -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO BUILD_DIR=${{ github.workspace }}/xcodebuild
+          xcodebuild build -scheme extractutil -project Samra.xcodeproj -configuration Release CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO BUILD_DIR=${{ github.workspace }}/xcodebuild
           
           mkdir -p ${{ github.workspace }}/product
           cp -R ${{ github.workspace }}/xcodebuild/Release/Samra.app ${{ github.workspace }}/product
+          
+          mv  ${{ github.workspace }}/xcodebuild/Release/extractutil ${{ github.workspace }}/product/Samra.app/Contents/MacOS
           
           cd ${{ github.workspace }}/product
           zip -r ${{ github.workspace }}/Samra.zip .
