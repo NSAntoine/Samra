@@ -303,74 +303,13 @@ extension RenditionListViewController {
         panel.canChooseFiles = false
         
         guard panel.runModal() == .OK, let destinationURL = panel.url else { return }
-        let justRenditions = collection.flatMap(\.renditions)
-        var failedItems: [Rendition: String] = [:]
-        for rendition in justRenditions {
-            switch rendition.type {
-            case .image, .icon:
-                guard let image = rendition.image else {
-                    failedItems[rendition] = "Failed to generate image"
-                    continue
-                }
-                
-                let rep = NSBitmapImageRep(cgImage: image)
-                guard let data = rep.representation(using: .png, properties: [.compressionFactor: 1]) else {
-                    failedItems[rendition] = "Unable to generate png data for image"
-                    continue
-                }
-                
-                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
-                if writeURL.pathExtension.isEmpty {
-                    writeURL.appendPathExtension("png")
-                }
-                
-                do {
-                    try data.write(to: writeURL, options: .atomic)
-                } catch {
-                    failedItems[rendition] = "Failed to write to \(writeURL.path): \(error)"
-                }
-            case .pdf:
-                guard let data = rendition.cuiRend.srcData else {
-                    failedItems[rendition] = "Failed to generate PDF data"
-                    continue
-                }
-                
-                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
-                if writeURL.pathExtension != "pdf" {
-                    writeURL.appendPathExtension("pdf")
-                }
-                
-                do {
-                    try data.write(to: writeURL)
-                } catch {
-                    failedItems[rendition] = "Unable to write to \(writeURL.path): \(error.localizedDescription)"
-                }
-            case .svg:
-                guard let svg = rendition.cuiRend.svgDocument() else {
-                    failedItems[rendition] = "Failed to generate SVG"
-                    continue
-                }
-                
-                var writeURL = destinationURL.appendingPathComponent(rendition.namedLookup.name)
-                if writeURL.pathExtension != "svg" {
-                    writeURL.appendPathExtension("svg")
-                }
-                SVGDocument(doc: svg).write(to: writeURL)
-            default:
-                break
-            }
-        }
         
-        if !failedItems.isEmpty {
-            var failedItemsMessage: String = ""
-            for (rendition, error) in failedItems {
-                failedItemsMessage.append("\(rendition.name): \(error.localizedLowercase)")
-            }
-            failedItemsMessage = failedItemsMessage.trimmingCharacters(in: .whitespaces)
-            NSAlert(title: "Failed to export (some) items", message: failedItemsMessage)
-                .runModal()
-        } else {
+        do {
+            try AssetCatalogWrapper.shared.extract(collection: collection, to: destinationURL)
             NSWorkspace.shared.activateFileViewerSelecting([destinationURL])
+        } catch {
+            NSAlert(title: "Failed to export (some) items", message: error.localizedDescription)
+                .runModal()
         }
     }
 }

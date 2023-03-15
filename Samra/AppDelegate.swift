@@ -11,6 +11,8 @@ import AssetCatalogWrapper
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     
+    var showWelcomeViewController: Bool = false
+    
     static func main() {
         let instance = AppDelegate()
         NSApplication.shared.delegate = instance
@@ -119,12 +121,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 NSMenuItem(title: "Help", action: #selector(NSApplication.showHelp(_:)), keyEquivalent: "?")
             ]),
         ])
-    }
-    
-    func makeOpenMenuItem() -> NSMenu {
-        let menu = NSMenu()
-        menu.addItem(withTitle: "Title", action: nil, keyEquivalent: "O")
-        return menu
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
