@@ -22,10 +22,6 @@
 		CE3BC0AF29A0E345009823CF /* BasicLayoutAnchorsHolding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC0AE29A0E345009823CF /* BasicLayoutAnchorsHolding.swift */; };
 		CE3BC0B129A0E990009823CF /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC0B029A0E990009823CF /* Preferences.swift */; };
 		CE45E09D29C24E1F00817359 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45E09C29C24E1F00817359 /* main.swift */; };
-		CE45E0A229C24F6C00817359 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CE45E0A129C24F6C00817359 /* AssetCatalogWrapper */; };
-		CE45E0A429C24F6C00817359 /* SVGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CE45E0A329C24F6C00817359 /* SVGWrapper */; };
-		CE46D45D29B7DD8400191FA1 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CE46D45C29B7DD8400191FA1 /* AssetCatalogWrapper */; };
-		CE46D45F29B7DD8400191FA1 /* SVGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CE46D45E29B7DD8400191FA1 /* SVGWrapper */; };
 		CE5AF1A829A2516500C675D8 /* RenditionTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5AF1A729A2516500C675D8 /* RenditionTypeHeaderView.swift */; };
 		CE7D54A729A1238F00862873 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7D54A629A1238F00862873 /* Extensions.swift */; };
 		CE7D54AD29A1313000862873 /* TypesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7D54AC29A1313000862873 /* TypesListViewController.swift */; };
@@ -35,6 +31,10 @@
 		CE7E5D9829B1D5D30064B91B /* QuickLookUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CE7E5D9729B1D5D30064B91B /* QuickLookUI.framework */; };
 		CEA6629029A4E5FF00215B08 /* WelcomeScreenOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA6628F29A4E5FF00215B08 /* WelcomeScreenOption.swift */; };
 		CEA71A5E29AE760900BEBE93 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA71A5D29AE760900BEBE93 /* AboutViewController.swift */; };
+		CEB9867329C44AA6000650B5 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CEB9867229C44AA6000650B5 /* AssetCatalogWrapper */; };
+		CEB9867529C44AA6000650B5 /* SVGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CEB9867429C44AA6000650B5 /* SVGWrapper */; };
+		CEB9867729C44AD9000650B5 /* AssetCatalogWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CEB9867629C44AD9000650B5 /* AssetCatalogWrapper */; };
+		CEB9867929C44AD9000650B5 /* SVGWrapper in Frameworks */ = {isa = PBXBuildFile; productRef = CEB9867829C44AD9000650B5 /* SVGWrapper */; };
 		CEC3B27C29B14551007E853E /* AssetCatalogDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC3B27B29B14551007E853E /* AssetCatalogDocument.swift */; };
 		CEC5EBC729B7CCD6009BA873 /* DiffListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC5EBC629B7CCD6009BA873 /* DiffListViewController.swift */; };
 		CED4DE3129A626D7008B2B8A /* CollapseNotifierSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED4DE3029A626D7008B2B8A /* CollapseNotifierSplitViewController.swift */; };
@@ -99,8 +99,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE7E5D9829B1D5D30064B91B /* QuickLookUI.framework in Frameworks */,
-				CE46D45F29B7DD8400191FA1 /* SVGWrapper in Frameworks */,
-				CE46D45D29B7DD8400191FA1 /* AssetCatalogWrapper in Frameworks */,
+				CEB9867529C44AA6000650B5 /* SVGWrapper in Frameworks */,
+				CEB9867329C44AA6000650B5 /* AssetCatalogWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,8 +108,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE45E0A229C24F6C00817359 /* AssetCatalogWrapper in Frameworks */,
-				CE45E0A429C24F6C00817359 /* SVGWrapper in Frameworks */,
+				CEB9867729C44AD9000650B5 /* AssetCatalogWrapper in Frameworks */,
+				CEB9867929C44AD9000650B5 /* SVGWrapper in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,8 +255,8 @@
 			);
 			name = Samra;
 			packageProductDependencies = (
-				CE46D45C29B7DD8400191FA1 /* AssetCatalogWrapper */,
-				CE46D45E29B7DD8400191FA1 /* SVGWrapper */,
+				CEB9867229C44AA6000650B5 /* AssetCatalogWrapper */,
+				CEB9867429C44AA6000650B5 /* SVGWrapper */,
 			);
 			productName = Samra;
 			productReference = CE3BC09429A0C626009823CF /* Samra.app */;
@@ -276,8 +276,8 @@
 			);
 			name = extractutil;
 			packageProductDependencies = (
-				CE45E0A129C24F6C00817359 /* AssetCatalogWrapper */,
-				CE45E0A329C24F6C00817359 /* SVGWrapper */,
+				CEB9867629C44AD9000650B5 /* AssetCatalogWrapper */,
+				CEB9867829C44AD9000650B5 /* SVGWrapper */,
 			);
 			productName = extractutil;
 			productReference = CE45E09A29C24E1F00817359 /* extractutil */;
@@ -311,7 +311,7 @@
 			);
 			mainGroup = CE3BC08B29A0C625009823CF;
 			packageReferences = (
-				CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */,
+				CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */,
 			);
 			productRefGroup = CE3BC09529A0C626009823CF /* Products */;
 			projectDirPath = "";
@@ -615,9 +615,9 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */ = {
+		CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SerenaKit/SantanderWrappers";
+			repositoryURL = "https://github.com/SerenaKit/PrivateKits";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -626,24 +626,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CE45E0A129C24F6C00817359 /* AssetCatalogWrapper */ = {
+		CEB9867229C44AA6000650B5 /* AssetCatalogWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */;
+			package = CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */;
 			productName = AssetCatalogWrapper;
 		};
-		CE45E0A329C24F6C00817359 /* SVGWrapper */ = {
+		CEB9867429C44AA6000650B5 /* SVGWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */;
+			package = CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */;
 			productName = SVGWrapper;
 		};
-		CE46D45C29B7DD8400191FA1 /* AssetCatalogWrapper */ = {
+		CEB9867629C44AD9000650B5 /* AssetCatalogWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */;
+			package = CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */;
 			productName = AssetCatalogWrapper;
 		};
-		CE46D45E29B7DD8400191FA1 /* SVGWrapper */ = {
+		CEB9867829C44AD9000650B5 /* SVGWrapper */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE46D45B29B7DD8400191FA1 /* XCRemoteSwiftPackageReference "SantanderWrappers" */;
+			package = CEB9867129C44AA6000650B5 /* XCRemoteSwiftPackageReference "PrivateKits" */;
 			productName = SVGWrapper;
 		};
 /* End XCSwiftPackageProductDependency section */
