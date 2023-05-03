@@ -24,8 +24,8 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
     var leftCatalogPathLabel: NSTextField!
     var rightCatalogPathLabel: NSTextField!
     
-    var leftCatalogPreview: NSView!
-    var rightCatalogPreview: NSView!
+    var leftCatalogPreview: DiffFilePreviewView!
+    var rightCatalogPreview: DiffFilePreviewView!
     
     var diffCatalogsButton: NSButton!
     
@@ -34,11 +34,11 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         
         let leftButton = NSButton(title: "Left...",
                                   target: self, action: #selector(leftOrRightButtonClicked(sender:)))
-        leftButton.tag = Side.left.rawValue
+        leftButton.tag = DiffSide.left.rawValue
         
         let rightButton = NSButton(title: "Right...",
                                    target: self, action: #selector(leftOrRightButtonClicked(sender:)))
-        rightButton.tag = Side.right.rawValue
+        rightButton.tag = DiffSide.right.rawValue
         
         leftButton.translatesAutoresizingMaskIntoConstraints = false
         rightButton.translatesAutoresizingMaskIntoConstraints = false
@@ -60,9 +60,8 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         
         view.addSubview(diffCatalogsButton)
         
-        
         let previewBackgroundColor = NSColor(red: 0.22, green: 0.21, blue: 0.21, alpha: 1.00)
-        leftCatalogPreview = makePreview(color: previewBackgroundColor)
+		leftCatalogPreview = makePreview(color: previewBackgroundColor, side: .left)
         leftCatalogPreview.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(leftCatalogPreview)
         
@@ -71,7 +70,7 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         leftCatalogPreviewLabel.alignment = .center
         view.addSubview(leftCatalogPreviewLabel)
         
-        rightCatalogPreview = makePreview(color: previewBackgroundColor)
+		rightCatalogPreview = makePreview(color: previewBackgroundColor, side: .right)
         rightCatalogPreview.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(rightCatalogPreview)
         
@@ -127,16 +126,10 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         view.window?.styleMask.remove(.resizable)
     }
     
-    func makePreview(color: NSColor) -> NSView {
-        let preview = NSView()
-        
-        let previewLayer = CALayer()
-        previewLayer.backgroundColor = color.cgColor
-        previewLayer.borderColor = NSColor.lightGray.cgColor
-        previewLayer.borderWidth = 1.34
-        previewLayer.cornerRadius = 8
-        preview.layer = previewLayer
-        return preview
+	func makePreview(color: NSColor, side: DiffSide) -> DiffFilePreviewView {
+        let preview = DiffFilePreviewView(side: side)
+		preview.delegate = self
+		return preview
     }
     
     @objc
@@ -167,11 +160,11 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         // tag 1 = left
         // tag 2 = right
         URLHandler.shared.presentArchiveChooserPanel(senderView: nil) { [unowned self] url in
-            validateURL(url, forSide: Side(rawValue: sender.tag)!)
+            validateAndProcessURL(url, forSide: DiffSide(rawValue: sender.tag)!)
         }
     }
     
-    func validateURL(_ url: URL, forSide side: Side) {
+    func validateAndProcessURL(_ url: URL, forSide side: DiffSide) {
         // if it's an .app, point to it's .car file
         let urlToChoose = url.pathExtension == "app" ? url.appendingPathComponent("Contents/Resources/Assets.car") : url
         guard FileManager.default.fileExists(atPath: urlToChoose.path) else {
@@ -184,12 +177,10 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
             case .left:
                 leftCatalogInput = try AssetCatalogInput(fileURL: urlToChoose)
                 leftCatalogPathLabel.stringValue = urlToChoose.path
-                leftCatalogPreview.viewWithTag(40)?.removeFromSuperview()
                 setImageViewForPreview(url: url, side: .left)
             case .right:
                 rightCatalogInput = try AssetCatalogInput(fileURL: urlToChoose)
                 rightCatalogPathLabel.stringValue = urlToChoose.path
-                rightCatalogPreview.viewWithTag(40)?.removeFromSuperview()
                 setImageViewForPreview(url: url, side: .right)
             }
             
@@ -200,29 +191,18 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
         }
     }
     
-    func setImageViewForPreview(url: URL, side: Side) {
-        let preview: NSView
-        switch side {
-        case .left:
-            preview = leftCatalogPreview
-        case .right:
-            preview = rightCatalogPreview
-        }
-        
-        let imageView = NSImageView(image: NSWorkspace.shared.icon(forFile: url.path))
-        imageView.tag = 40
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        preview.addSubview(imageView)
-        
-        NSLayoutConstraint.activate([
-            imageView.heightAnchor.constraint(equalTo: preview.heightAnchor),
-            imageView.centerYAnchor.constraint(equalTo: preview.centerYAnchor),
-            imageView.centerXAnchor.constraint(equalTo: preview.centerXAnchor)
-        ])
+    func setImageViewForPreview(url: URL, side: DiffSide) {
+		switch side {
+		case .left:
+			leftCatalogPreview.imageView.image = NSWorkspace.shared.icon(forFile: url.path)
+		case .right:
+			rightCatalogPreview.imageView.image = NSWorkspace.shared.icon(forFile: url.path)
+		}
     }
-    
-    enum Side: Int {
-        case left = 1
-        case right = 2
-    }
+}
+
+extension AssetCatalogDiffSelectionViewController: DiffFilePreviewDelegate {
+	func diffFilePreview(_ view: DiffFilePreviewView, didGetURLDragged urlRecieved: URL) {
+		validateAndProcessURL(urlRecieved, forSide: view.side)
+	}
 }

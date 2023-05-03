@@ -25,3 +25,8 @@ struct RenditionDiff {
         }
     }
 }
+
+enum DiffSide: Int {
+	case left = 1
+	case right = 2
+}

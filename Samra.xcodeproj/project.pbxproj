@@ -21,6 +21,7 @@
 		CE3BC0A929A0D713009823CF /* PastFilesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC0A829A0D713009823CF /* PastFilesListViewController.swift */; };
 		CE3BC0AF29A0E345009823CF /* BasicLayoutAnchorsHolding.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC0AE29A0E345009823CF /* BasicLayoutAnchorsHolding.swift */; };
 		CE3BC0B129A0E990009823CF /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3BC0B029A0E990009823CF /* Preferences.swift */; };
+		CE3F2D052A02DABC0026A9F9 /* DiffFilePreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3F2D042A02DABC0026A9F9 /* DiffFilePreviewView.swift */; };
 		CE45E09D29C24E1F00817359 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE45E09C29C24E1F00817359 /* main.swift */; };
 		CE5AF1A829A2516500C675D8 /* RenditionTypeHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5AF1A729A2516500C675D8 /* RenditionTypeHeaderView.swift */; };
 		CE7D54A729A1238F00862873 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE7D54A629A1238F00862873 /* Extensions.swift */; };
@@ -71,6 +72,7 @@
 		CE3BC0A829A0D713009823CF /* PastFilesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PastFilesListViewController.swift; sourceTree = "<group>"; };
 		CE3BC0AE29A0E345009823CF /* BasicLayoutAnchorsHolding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLayoutAnchorsHolding.swift; sourceTree = "<group>"; };
 		CE3BC0B029A0E990009823CF /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		CE3F2D042A02DABC0026A9F9 /* DiffFilePreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiffFilePreviewView.swift; sourceTree = "<group>"; };
 		CE45E09A29C24E1F00817359 /* extractutil */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = extractutil; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE45E09C29C24E1F00817359 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		CE5AF1A729A2516500C675D8 /* RenditionTypeHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenditionTypeHeaderView.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				CE375E6329B65D3900CAC2F0 /* AssetCatalogDiffSelectionViewController.swift */,
+				CE3F2D042A02DABC0026A9F9 /* DiffFilePreviewView.swift */,
 				CEC5EBC629B7CCD6009BA873 /* DiffListViewController.swift */,
 			);
 			path = Diff;
@@ -357,6 +360,7 @@
 				CE1F1D3629B0ADCE000B288C /* ClosureMenuItem.swift in Sources */,
 				CEA71A5E29AE760900BEBE93 /* AboutViewController.swift in Sources */,
 				CE7D54A729A1238F00862873 /* Extensions.swift in Sources */,
+				CE3F2D052A02DABC0026A9F9 /* DiffFilePreviewView.swift in Sources */,
 				CED4DE3129A626D7008B2B8A /* CollapseNotifierSplitViewController.swift in Sources */,
 				CE375E6629B6675900CAC2F0 /* AssetCatalogInput.swift in Sources */,
 				CEEA6AB429A515EA00B3CEA9 /* DetailItem.swift in Sources */,
