@@ -62,18 +62,6 @@ extension CGImage {
     }
 }
 
-extension NSView {
-    func setHiddenWithAnimations(hidden: Bool) {
-        NSAnimationContext.runAnimationGroup { animationContext in
-            animationContext.duration = hidden ? 0.1 : 0.1
-            animator().alphaValue = 0
-        } completionHandler: {
-            self.isHidden = hidden
-            self.alphaValue = 1
-        }
-    }
-}
-
 extension NSAlert {
     convenience init(title: String, message: String? = nil) {
         self.init()

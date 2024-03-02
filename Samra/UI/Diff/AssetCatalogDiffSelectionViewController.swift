@@ -157,8 +157,6 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
     
     @objc
     func leftOrRightButtonClicked(sender: NSButton) {
-        // tag 1 = left
-        // tag 2 = right
         URLHandler.shared.presentArchiveChooserPanel(senderView: nil) { [unowned self] url in
             validateAndProcessURL(url, forSide: DiffSide(rawValue: sender.tag)!)
         }
@@ -177,13 +175,13 @@ class AssetCatalogDiffSelectionViewController: NSViewController {
             case .left:
                 leftCatalogInput = try AssetCatalogInput(fileURL: urlToChoose)
                 leftCatalogPathLabel.stringValue = urlToChoose.path
-                setImageViewForPreview(url: url, side: .left)
+				leftCatalogPreview.imageView.image = NSWorkspace.shared.icon(forFile: url.path)
             case .right:
                 rightCatalogInput = try AssetCatalogInput(fileURL: urlToChoose)
                 rightCatalogPathLabel.stringValue = urlToChoose.path
-                setImageViewForPreview(url: url, side: .right)
+				rightCatalogPreview.imageView.image = NSWorkspace.shared.icon(forFile: url.path)
             }
-            
+   
             diffCatalogsButton.isEnabled = rightCatalogInput != nil && leftCatalogInput != nil
         } catch {
             NSAlert(title: "Unable to open Asset Catalog file \(urlToChoose.path)")

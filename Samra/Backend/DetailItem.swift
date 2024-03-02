@@ -49,10 +49,10 @@ struct DetailItemSection: Hashable {
             DetailItem(primaryText: "UNIX Timestamp", secondaryText: assetStorage.storageTimestamp())
         ])
         
+        let coreUIVersionText: CustomStringConvertible = assetStorage.responds(to: #selector(CUICommonAssetStorage.coreuiVersion)) ? assetStorage.coreuiVersion() : "Unknown"
         let coreUISection = DetailItemSection(sectionHeader: "Other", items: [
-            DetailItem(primaryText: "CoreUI Version", secondaryText: assetStorage.coreuiVersion()),
+            DetailItem(primaryText: "CoreUI Version", secondaryText: coreUIVersionText),
             DetailItem(primaryText: "Schema Version", secondaryText: assetStorage.schemaVersion()),
-            DetailItem(primaryText: "UUID", secondaryText: assetStorage.uuid())
         ])
         
         return [toolSection, argumentsSection, dateSection, coreUISection]
