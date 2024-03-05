@@ -41,6 +41,7 @@
 		CED4DE3129A626D7008B2B8A /* CollapseNotifierSplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED4DE3029A626D7008B2B8A /* CollapseNotifierSplitViewController.swift */; };
 		CEEA6AB429A515EA00B3CEA9 /* DetailItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEA6AB329A515EA00B3CEA9 /* DetailItem.swift */; };
 		CEEE131029B73B99009C1ACD /* RenditionDiff.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEEE130F29B73B99009C1ACD /* RenditionDiff.swift */; };
+		CEF987032B974C53002177A2 /* ClosureBasedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEF987022B974C53002177A2 /* ClosureBasedButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -93,6 +94,7 @@
 		CED4DE3029A626D7008B2B8A /* CollapseNotifierSplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollapseNotifierSplitViewController.swift; sourceTree = "<group>"; };
 		CEEA6AB329A515EA00B3CEA9 /* DetailItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailItem.swift; sourceTree = "<group>"; };
 		CEEE130F29B73B99009C1ACD /* RenditionDiff.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenditionDiff.swift; sourceTree = "<group>"; };
+		CEF987022B974C53002177A2 /* ClosureBasedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureBasedButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -160,6 +162,7 @@
 				CED4DE3029A626D7008B2B8A /* CollapseNotifierSplitViewController.swift */,
 				CEA71A5D29AE760900BEBE93 /* AboutViewController.swift */,
 				CE1F1D3329B0A4C1000B288C /* MenuableCollectionView.swift */,
+				CEF987022B974C53002177A2 /* ClosureBasedButton.swift */,
 				CEC5EBC529B7CCCA009BA873 /* Diff */,
 				CECA445029A23D80003222D0 /* Rendition */,
 			);
@@ -351,6 +354,7 @@
 				CE15D4BF29A3E5D5001D66E6 /* URLHandler.swift in Sources */,
 				CE1673DB29ACDF8100F94683 /* AssetCatalogDetailsView.swift in Sources */,
 				CE7D54AD29A1313000862873 /* TypesListViewController.swift in Sources */,
+				CEF987032B974C53002177A2 /* ClosureBasedButton.swift in Sources */,
 				CE1F1D3429B0A4C1000B288C /* MenuableCollectionView.swift in Sources */,
 				CE375E6429B65D3900CAC2F0 /* AssetCatalogDiffSelectionViewController.swift in Sources */,
 				CE7D54B129A14F2200862873 /* RenditionCollectionViewItem.swift in Sources */,

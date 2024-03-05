@@ -17,6 +17,21 @@ class URLHandler {
     @objc
     func presentArchiveChooserPanel(insertToRecentItems: Bool = false, senderView: NSView?, handler: ((URL) -> Void)? = nil) {
         let panel = NSOpenPanel()
+        let button = ClosureBasedButton(checkboxWithTitle: "Treat Bundles as directories", target: nil, action: nil)
+        button.allowsMixedState = false
+        button.setAction {
+            switch button.state {
+            case .on:
+                panel.treatsFilePackagesAsDirectories = true
+            case .off:
+                panel.treatsFilePackagesAsDirectories = false
+            default:
+                print("Not supposed to be here")
+            }
+        }
+        
+        panel.accessoryView = button
+        panel.accessoryView?.frame.size.height += 18
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = false
         if #available(macOS 11, *) {
@@ -33,6 +48,7 @@ class URLHandler {
             }
         }
     }
+    
     
     func handleURLChosen(urlChosen: URL,
                          senderView: NSView?,
