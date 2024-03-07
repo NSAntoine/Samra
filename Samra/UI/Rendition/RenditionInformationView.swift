@@ -76,6 +76,27 @@ struct RenditionInformationView: View {
         }
         
         HStack {
+            if rendition.type == .rawData, rendition.cuiRend.responds(to: #selector(CUIThemeRendition.data)) {
+                Button("Export Data to...") {
+                    guard let data = rendition.cuiRend.data() else { 
+                        NSAlert(title: "Failed to export data", message: "Unable to get data (rendition.cuiRend.data() returned null)")
+                            .runModal()
+                        return
+                    }
+                    
+                    let savePanel = NSSavePanel()
+                    savePanel.nameFieldStringValue = rendition.name
+                    if savePanel.runModal() == .OK, let url = savePanel.url {
+                        do {
+                            try data.write(to: url)
+                        } catch {
+                            NSAlert(title: "Error trying to write data to file \(url)", message: error.localizedDescription)
+                                .runModal()
+                        }
+                    }
+                }
+            }
+            
             Button("Edit") {
                 switch rendition.representation {
                 case .color(let cgColor):

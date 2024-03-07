@@ -114,6 +114,8 @@ extension PastFilesListViewController: NSTableViewDataSource, NSTableViewDelegat
             subtitleText.font = .systemFont(ofSize: 11)
         }
         
+        subtitleText.lineBreakMode = .byTruncatingMiddle
+        
         subtitleText.textColor = .secondaryLabelColor
         
         let titlesStackView = NSStackView(views: [text, subtitleText])
@@ -127,6 +129,7 @@ extension PastFilesListViewController: NSTableViewDataSource, NSTableViewDelegat
         cell.addSubview(stackView)
         NSLayoutConstraint.activate([
             stackView.leadingAnchor.constraint(equalTo: cell.leadingAnchor),
+            stackView.trailingAnchor.constraint(equalTo: cell.trailingAnchor),
             stackView.centerYAnchor.constraint(equalTo: cell.centerYAnchor),
         ])
         
