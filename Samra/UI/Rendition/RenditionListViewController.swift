@@ -208,6 +208,24 @@ extension RenditionListViewController {
 }
 
 extension RenditionListViewController: MenuProvider {
+    
+    static private func _promptToSaveImage(cgImage: CGImage, formatType: NSBitmapImageRep.FileType, defaultFileName: String, displayFormat: String) {
+        let savePanel = NSSavePanel()
+        savePanel.nameFieldStringValue = defaultFileName
+        guard savePanel.runModal() == .OK, let urlToSaveTo = savePanel.url else { return }
+        
+        guard let data = NSBitmapImageRep(cgImage: cgImage).representation(using: formatType, properties: [.compressionFactor: 1]) else {
+            NSAlert(title: "Failed to save Image as \(displayFormat)", message: "NSBitmapImageRep representation returned nil.").runModal()
+            return
+        }
+        
+        do {
+            try data.write(to: urlToSaveTo)
+        } catch {
+            NSAlert(title: "Failed to save Image as \(displayFormat)", message: error.localizedDescription).runModal()
+        }
+    }
+    
     func collectionView(_ collectionView: NSCollectionView, menuForItemAt indexPath: IndexPath) -> NSMenu? {
         guard let item = dataSource.itemIdentifier(for: indexPath) else { return nil }
         let copyName = ClosureMenuItem(title: "Copy Name") {
@@ -215,7 +233,7 @@ extension RenditionListViewController: MenuProvider {
             NSPasteboard.general.setString(item.name, forType: .string)
         }
         
-        var items = [copyName]
+        var items: [NSMenuItem] = [copyName]
         
         switch item.representation {
         case .image(let cgImage):
@@ -224,6 +242,31 @@ extension RenditionListViewController: MenuProvider {
                 NSPasteboard.general.setData(NSImage(cgImage: cgImage, size: cgImage.size).tiffRepresentation, forType: .tiff)
             }
             items.append(copyImage)
+            
+            var saveImageAsItems = [
+                ClosureMenuItem(title: "PNG") {
+                    Self._promptToSaveImage(cgImage: cgImage, formatType: .png, defaultFileName: "image.png", displayFormat: "PNG")
+                },
+                
+                ClosureMenuItem(title: "JPEG") {
+                    Self._promptToSaveImage(cgImage: cgImage, formatType: .jpeg, defaultFileName: "image.jpeg", displayFormat: "JPEG")
+                }
+            ]
+            
+            if item.type == .svg, let svgDoc = item.cuiRend.svgDocument() {
+                let asSVG = ClosureMenuItem(title: "SVG") {
+                    let savePanel = NSSavePanel()
+                    savePanel.nameFieldStringValue = "image.svg"
+                    guard savePanel.runModal() == .OK, let urlToSaveTo = savePanel.url else { return }
+                    CGSVGDocumentWriteToURL(svgDoc, urlToSaveTo as CFURL, nil)
+                }
+                
+                saveImageAsItems.insert(asSVG, at: 0)
+            }
+            
+            let saveImageAs = NSMenuItem(submenuTitle: "Save Image As...", items: saveImageAsItems)
+            items.insert(saveImageAs, at: 0)
+            items.insert(.separator(), at: 1)
         default:
             break
         }

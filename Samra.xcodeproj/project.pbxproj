@@ -510,7 +510,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.3;
+				CURRENT_PROJECT_VERSION = 1.4;
 				DEVELOPMENT_TEAM = L9735M962H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Samra/Info.plist;
@@ -521,7 +521,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15.1;
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serena.Samra;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -545,7 +545,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1.3;
+				CURRENT_PROJECT_VERSION = 1.4;
 				DEVELOPMENT_TEAM = L9735M962H;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Samra/Info.plist;
@@ -556,7 +556,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 10.15.1;
 				MARKETING_VERSION = 1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.serena.Samra;
 				PRODUCT_NAME = "$(TARGET_NAME)";

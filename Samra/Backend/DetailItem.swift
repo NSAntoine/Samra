@@ -61,9 +61,13 @@ struct DetailItemSection: Hashable {
     static func from(rendition: Rendition) -> [DetailItemSection] {
         let cuiRend = rendition.cuiRend
         let namedLookup = rendition.namedLookup
-        let diskSize = cuiRend.srcData.count.formatted(.byteCount(style:.memory,
-                                                                  spellsOutZero: true,
-                                                                  includesActualByteCount: true))
+        
+        let formatter = ByteCountFormatter()
+        formatter.countStyle = .memory
+        formatter.includesActualByteCount = true
+        
+        let diskSize = formatter.string(fromByteCount: Int64(cuiRend.srcData.count))
+        
         let sizeOnDisk = DetailItem(primaryText: "Size On Disk", secondaryText: diskSize)
         var items: [DetailItemSection] = []
 
@@ -76,9 +80,7 @@ struct DetailItemSection: Hashable {
             ]))
             var details : [DetailItem] = []
             if let data = cuiRend.data() {
-                let size = data.count.formatted(.byteCount(style:.memory,
-                                                           spellsOutZero: true,
-                                                           includesActualByteCount: true))
+                let size = formatter.string(fromByteCount: Int64(data.count))
                 details.append(DetailItem(primaryText: "Data Length", secondaryText:size))
 
             }
