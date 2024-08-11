@@ -59,44 +59,72 @@ struct DetailItemSection: Hashable {
     }
     
     static func from(rendition: Rendition) -> [DetailItemSection] {
-        var items = [
-            DetailItemSection(sectionHeader: "Name", items: [
-                DetailItem(primaryText: "Rendition Name", secondaryText: rendition.cuiRend.name()),
-                DetailItem(primaryText: "Lookup Name", secondaryText: rendition.namedLookup.name),
-            ])
-        ]
-        
-        switch rendition.representation {
-        case .color(let cgColor):
-            let nsColor = NSColor(cgColor: cgColor)?.usingColorSpace(.deviceRGB)
+        let cuiRend = rendition.cuiRend
+        let namedLookup = rendition.namedLookup
+        let diskSize = cuiRend.srcData.count.formatted(.byteCount(style:.memory,
+                                                                  spellsOutZero: true,
+                                                                  includesActualByteCount: true))
+        let sizeOnDisk = DetailItem(primaryText: "Size On Disk", secondaryText: diskSize)
+        var items: [DetailItemSection] = []
+
+        switch rendition.type {
+        case .rawData:
+            items.append(DetailItemSection(sectionHeader: "Base Attributes", items: [
+                DetailItem(primaryText: "Name", secondaryText: namedLookup.name),
+                sizeOnDisk,
+                DetailItem(primaryText: "Compression", secondaryText:cuiRend.bitmapEncoding())
+            ]))
+            var details : [DetailItem] = []
+            if let data = cuiRend.data() {
+                let size = data.count.formatted(.byteCount(style:.memory,
+                                                           spellsOutZero: true,
+                                                           includesActualByteCount: true))
+                details.append(DetailItem(primaryText: "Data Length", secondaryText:size))
+
+            }
+            if let uti = cuiRend.utiType() {
+                details.append(DetailItem(primaryText: "UTI", secondaryText:uti))
+            }
+            items.append(DetailItemSection(sectionHeader: "Data Attributes", items: details))
+
+        case .color:
+            items.append(DetailItemSection(sectionHeader: "Base Attributes", items: [
+                DetailItem(primaryText: "Name", secondaryText: cuiRend.name()),
+                sizeOnDisk,
+            ]))
+            let cgColor = cuiRend.cgColor().takeUnretainedValue()
+            let nsColor = NSColor(cgColor:cgColor)?.usingColorSpace(.deviceRGB)
             var red: CGFloat = 0
             var green: CGFloat = 0
             var blue: CGFloat = 0
             var alpha: CGFloat = 0
             nsColor?.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
             
-            items.append(DetailItemSection(sectionHeader: "Color Info", items: [
+            items.append(DetailItemSection(sectionHeader: "Color Attributes", items: [
                 DetailItem(primaryText: "Red", secondaryText: Int(red * 255)),
-                DetailItem(primaryText: "Blue", secondaryText: Int(blue * 255)),
                 DetailItem(primaryText: "Green", secondaryText: Int(green * 255)),
+                DetailItem(primaryText: "Blue", secondaryText: Int(blue * 255)),
             ]))
+
         default:
-            break
-        }
-        
-        if rendition.type != .color {
-            let size = rendition.cuiRend.unslicedSize()
+            items.append(DetailItemSection(sectionHeader: "Base Attributes", items: [
+                DetailItem(primaryText: "Rendition Name", secondaryText: cuiRend.name()),
+                DetailItem(primaryText: "Lookup Name", secondaryText: namedLookup.name),
+                sizeOnDisk,
+                DetailItem(primaryText: "Compression", secondaryText:cuiRend.bitmapEncoding())
+            ]))
+            let size = cuiRend.unslicedSize()
             items.append(DetailItemSection(sectionHeader: "Dimensions", items: [
                 DetailItem(primaryText: "Width", secondaryText: size.width),
                 DetailItem(primaryText: "Height", secondaryText: size.height),
-                DetailItem(primaryText: "Scale", secondaryText: rendition.cuiRend.scale())
+                DetailItem(primaryText: "Scale", secondaryText: cuiRend.scale())
             ]))
         }
         
-        let key = rendition.namedLookup.key
+        let key = namedLookup.key
         items.append(DetailItemSection(sectionHeader: "Rendition Information", items: [
             DetailItem(primaryText: "Display Gamut", secondaryText: Rendition.DisplayGamut(key)),
-            DetailItem(primaryText: "Appearance", secondaryText: rendition.namedLookup.appearance),
+            DetailItem(primaryText: "Appearance", secondaryText: namedLookup.appearance),
             DetailItem(primaryText: "Idiom", secondaryText: Rendition.Idiom(key))
         ]))
         
