@@ -26,7 +26,7 @@ class AboutViewController: NSViewController {
         let versionLabel = NSTextField(labelWithString: "Version \(version)")
         versionLabel.textColor = .secondaryLabelColor
         
-        let explanation = "An open source macOS Application to browse and edit Asset Catalog files, created by Serena"
+        let explanation = "An open source macOS Application to browse and edit Asset Catalog files, created by Antoine"
         let explanationLabel = NSTextField(wrappingLabelWithString: explanation)
         
         explanationLabel.textColor = NSColor(red: 0.60, green: 0.60, blue: 0.60, alpha: 1.00)
@@ -84,12 +84,12 @@ class AboutViewController: NSViewController {
     
     @objc
     func openSourceCode() {
-        NSWorkspace.shared.open(URL(string: "https://github.com/SerenaKit/Samra")!)
+        NSWorkspace.shared.open(URL(string: "https://github.com/NSAntoine/Samra")!)
     }
     
     @objc
     func openTwitter() {
-        NSWorkspace.shared.open(URL(string: "https://twitter.com/CoreSerena")!)
+        NSWorkspace.shared.open(URL(string: "https://twitter.com/NSAntoine")!)
     }
     
     override func viewDidAppear() {

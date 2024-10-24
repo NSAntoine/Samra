@@ -23,7 +23,7 @@ class WelcomeViewController: NSViewController {
         let welcomeTextLabel = NSTextField(labelWithString: "Welcome to Samra")
         welcomeTextLabel.font = .systemFont(ofSize: 30)
         
-        let subtitleLabel = NSTextField(labelWithString: "Created by Serena")
+        let subtitleLabel = NSTextField(labelWithString: "Created by Antoine (formerly known as Serena)")
         subtitleLabel.textColor = .secondaryLabelColor
         
         let stackView = NSStackView(views: [appIcon, welcomeTextLabel, subtitleLabel])
